@@ -1,6 +1,8 @@
 package com.xhpcd.rpc.client.request;
 
 import com.xhpcd.rpc.client.cache.ServiceProviderCache;
+import com.xhpcd.rpc.client.cluster.LoadBalanceStrategy;
+import com.xhpcd.rpc.client.cluster.StrategyProvider;
 import com.xhpcd.rpc.common.ChannelMapping;
 import com.xhpcd.rpc.data.RpcRequest;
 import com.xhpcd.rpc.data.RpcResponse;
@@ -10,7 +12,7 @@ import com.xhpcd.rpc.netty.codec.FrameEncoder;
 import com.xhpcd.rpc.netty.codec.RpcRequestEncoder;
 import com.xhpcd.rpc.netty.codec.RpcResponseDecoder;
 import com.xhpcd.rpc.netty.request.RequestPromise;
-import com.xhpcd.rpc.provider.ServiceProvider;
+import com.xhpcd.rpc.client.provider.ServiceProvider;
 import com.xhpcd.rpc.util.RpcHolder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -31,11 +33,13 @@ import java.util.List;
 public class RpcRequestManager {
     @Autowired
     private ServiceProviderCache serviceProviderCache;
+    @Autowired
+    private StrategyProvider strategyProvider;
 
     public RpcResponse sendRequest(RpcRequest request) {
         List<ServiceProvider> serviceProviders = serviceProviderCache.get(request.getClassName());
-        ServiceProvider serviceProvider = serviceProviders.get(0);
-
+        LoadBalanceStrategy strategy = strategyProvider.getStrategy();
+        ServiceProvider serviceProvider = strategy.select(serviceProviders);
         return doSendRequest(request,serviceProvider);
     }
 

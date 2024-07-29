@@ -3,7 +3,7 @@ package com.xhpcd.rpc.client.cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.xhpcd.rpc.provider.ServiceProvider;
+import com.xhpcd.rpc.client.provider.ServiceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 

@@ -14,8 +14,6 @@ public class RpcClientConfiguration {
     @Value("${rpc.client.zk.addr}")
     private String addr;
 
-    @Value("${rpc.client.api.package}")
-    private String rpcClientApiPackage;
 
     @Value("${rpc.cluster.strategy}")
     private String rpcClientClusterStrategy;
@@ -25,6 +23,7 @@ public class RpcClientConfiguration {
 
     @Value("${rpc.client.zk.timeout}")
     private int timeOut;
+
 
 
 }

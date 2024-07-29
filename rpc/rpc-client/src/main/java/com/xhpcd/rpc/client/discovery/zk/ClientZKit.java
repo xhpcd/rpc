@@ -3,7 +3,7 @@ package com.xhpcd.rpc.client.discovery.zk;
 
 import com.xhpcd.rpc.client.cache.ServiceProviderCache;
 import com.xhpcd.rpc.client.config.RpcClientConfiguration;
-import com.xhpcd.rpc.provider.ServiceProvider;
+import com.xhpcd.rpc.client.provider.ServiceProvider;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.springframework.beans.factory.annotation.Autowired;

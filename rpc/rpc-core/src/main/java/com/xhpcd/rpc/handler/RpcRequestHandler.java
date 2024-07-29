@@ -7,8 +7,6 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.reflect.Method;
 
 @Slf4j
@@ -26,7 +24,7 @@ public class RpcRequestHandler extends SimpleChannelInboundHandler<RpcRequest> {
             Class<?>[] parameterTypes = rpcRequest.getParameterTypes();
             Object bean = SpringBeanFactory.getBean(Class.forName(className));
             Method method = bean.getClass().getMethod(methodName, parameterTypes);
-            Object result = method.invoke(parameters);
+            Object result = method.invoke(bean,parameters);
             rpcResponse.setResult(result);
         } catch (Exception e){
             rpcResponse.setCause(e);

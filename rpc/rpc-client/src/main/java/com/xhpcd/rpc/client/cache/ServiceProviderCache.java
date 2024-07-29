@@ -1,6 +1,6 @@
 package com.xhpcd.rpc.client.cache;
 
-import com.xhpcd.rpc.provider.ServiceProvider;
+import com.xhpcd.rpc.client.provider.ServiceProvider;
 
 import java.util.List;
 

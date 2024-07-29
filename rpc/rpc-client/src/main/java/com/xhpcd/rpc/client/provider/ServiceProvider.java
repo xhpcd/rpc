@@ -1,4 +1,4 @@
-package com.xhpcd.rpc.provider;
+package com.xhpcd.rpc.client.provider;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

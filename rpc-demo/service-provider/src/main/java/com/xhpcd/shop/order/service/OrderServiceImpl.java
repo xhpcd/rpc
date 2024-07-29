@@ -8,6 +8,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String getOrder(String userId, String orderId) {
-        return "";
+        return "user: "+userId+"orderId:"+orderId;
     }
 }

@@ -1,7 +1,7 @@
 package com.xhpcd.rpc.client.cache;
 
 import com.google.common.cache.LoadingCache;
-import com.xhpcd.rpc.provider.ServiceProvider;
+import com.xhpcd.rpc.client.provider.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

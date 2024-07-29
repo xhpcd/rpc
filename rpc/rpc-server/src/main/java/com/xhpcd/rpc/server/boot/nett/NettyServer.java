@@ -1,5 +1,6 @@
 package com.xhpcd.rpc.server.boot.nett;
 
+import com.xhpcd.rpc.common.IpUtils;
 import com.xhpcd.rpc.handler.RpcRequestHandler;
 import com.xhpcd.rpc.netty.codec.FrameDecoder;
 import com.xhpcd.rpc.netty.codec.FrameEncoder;
@@ -10,7 +11,6 @@ import com.xhpcd.rpc.server.boot.config.RpcServerConfiguration;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 @Slf4j
 @Component
@@ -30,6 +31,7 @@ public class NettyServer implements RpcServer, Serializable {
     private RpcServerConfiguration rpcServerConfiguration;
     @Override
     public void start() {
+        String realIp = IpUtils.getRealIp();
         NioEventLoopGroup boss = new NioEventLoopGroup(1, new DefaultThreadFactory("Boss"));
         NioEventLoopGroup worker = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
         UnorderedThreadPoolEventExecutor eventExecutors = new UnorderedThreadPoolEventExecutor(NettyRuntime.availableProcessors() * 2);
@@ -56,7 +58,9 @@ public class NettyServer implements RpcServer, Serializable {
 
                         }
                     });
-            ChannelFuture future = serverBootstrap.bind(new InetSocketAddress(rpcServerConfiguration.getRpcPort())).sync();
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(rpcServerConfiguration.getRpcPort());
+            log.info("Server Netty bind {}:{}",inetSocketAddress.getAddress(),inetSocketAddress.getPort());
+            ChannelFuture future = serverBootstrap.bind(inetSocketAddress).sync();
 
             future.channel().closeFuture().addListener(new ChannelFutureListener() {
                 @Override

@@ -24,16 +24,17 @@ public class RpcAnnotationProcessor implements BeanPostProcessor {
             RpcRemote annotation = declaredField.getAnnotation(RpcRemote.class);
             if(annotation != null){
                 declaredField.setAccessible(true);
-            }
-            Class<?> type = declaredField.getType();
-            Object o = proxyFactory.newProxyInstance(type);
-            try {
+                Class<?> type = declaredField.getType();
+                Object o = proxyFactory.newProxyInstance(type);
+                try {
 
-                declaredField.set(bean,o);
-            } catch (IllegalAccessException e) {
-                log.error("filed {} inject field",declaredField);
-                throw new RuntimeException(e);
+                    declaredField.set(bean,o);
+                } catch (IllegalAccessException e) {
+                    log.error("filed {} inject field",declaredField);
+                     throw new RuntimeException(e);
+                }
             }
+
         }
         return bean;
     }
