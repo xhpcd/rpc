@@ -1,0 +1,18 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: rpc-client
+
+rpc:
+  client:
+    zk:
+      root: /rpc
+      addr: 192.168.88.130:2181
+      switch: true
+      timeout: 10000
+    api:
+      package: com.xhpcd.rpc.api
+  cluster:
+    strategy: random
