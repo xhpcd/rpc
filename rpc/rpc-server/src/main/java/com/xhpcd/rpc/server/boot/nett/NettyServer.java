@@ -2,10 +2,7 @@ package com.xhpcd.rpc.server.boot.nett;
 
 import com.xhpcd.rpc.common.IpUtils;
 import com.xhpcd.rpc.handler.RpcRequestHandler;
-import com.xhpcd.rpc.netty.codec.FrameDecoder;
-import com.xhpcd.rpc.netty.codec.FrameEncoder;
-import com.xhpcd.rpc.netty.codec.RpcRequestDecoder;
-import com.xhpcd.rpc.netty.codec.RpcResponseEncoder;
+import com.xhpcd.rpc.netty.codec.*;
 import com.xhpcd.rpc.server.boot.RpcServer;
 import com.xhpcd.rpc.server.boot.config.RpcServerConfiguration;
 import io.netty.bootstrap.ServerBootstrap;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 @Slf4j
 @Component
@@ -31,9 +27,14 @@ public class NettyServer implements RpcServer, Serializable {
     private RpcServerConfiguration rpcServerConfiguration;
     @Override
     public void start() {
-        String realIp = IpUtils.getRealIp();
+        /**
+         * 一主多从的Reactor模式
+         */
         NioEventLoopGroup boss = new NioEventLoopGroup(1, new DefaultThreadFactory("Boss"));
         NioEventLoopGroup worker = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
+        /**
+         * 避免业务线程过多的占用Netty的线程
+         */
         UnorderedThreadPoolEventExecutor eventExecutors = new UnorderedThreadPoolEventExecutor(NettyRuntime.availableProcessors() * 2);
 
         try {
@@ -51,9 +52,10 @@ public class NettyServer implements RpcServer, Serializable {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             pipeline.addLast("FrameEncoder",new FrameEncoder());
-                            pipeline.addLast("SerizableResponse",rpcResponseEncoder);
                             pipeline.addLast("FrameDecoder",new FrameDecoder());
-                            pipeline.addLast("DeSerializable",rpcRequestDecoder);
+                            pipeline.addLast("ProtoCodec",new MessageCodec());
+                          /*  pipeline.addLast("SerizableResponse",rpcResponseEncoder);
+                            pipeline.addLast("DeSerializable",rpcRequestDecoder);*/
                             pipeline.addLast(eventExecutors,"rpcRequestHandler",rpcRequestHandler);
 
                         }

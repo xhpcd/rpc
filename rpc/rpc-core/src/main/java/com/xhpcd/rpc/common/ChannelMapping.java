@@ -5,6 +5,9 @@ import io.netty.channel.Channel;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 对客户端的channel进行缓存 避免每次调用都进行三次握手创建连接
+ */
 @Data
 @Slf4j
 public class ChannelMapping {

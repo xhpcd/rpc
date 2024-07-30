@@ -1,8 +1,9 @@
 package com.xhpcd.rpc.handler;
 
+import com.xhpcd.rpc.data.Message;
 import com.xhpcd.rpc.data.RpcRequest;
 import com.xhpcd.rpc.data.RpcResponse;
-import com.xhpcd.rpc.spring.SpringBeanFactory;
+import com.xhpcd.rpc.spring.factorybean.SpringBeanFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -16,12 +17,15 @@ public class RpcRequestHandler extends SimpleChannelInboundHandler<RpcRequest> {
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcRequest rpcRequest) throws Exception {
 
         RpcResponse rpcResponse = new RpcResponse();
-        rpcResponse.setRequestId(rpcRequest.getRequestId());
+        rpcResponse.setSequenceId(rpcRequest.sequenceId);
+        rpcResponse.setAlgorithm(rpcRequest.getAlgorithm());
+        rpcResponse.setMessageType(Message.RpcResponse);
         try {
             String className = rpcRequest.getClassName();
             String methodName = rpcRequest.getMethodName();
             Object[] parameters = rpcRequest.getParameters();
             Class<?>[] parameterTypes = rpcRequest.getParameterTypes();
+            //通过spring容器获取实现类
             Object bean = SpringBeanFactory.getBean(Class.forName(className));
             Method method = bean.getClass().getMethod(methodName, parameterTypes);
             Object result = method.invoke(bean,parameters);

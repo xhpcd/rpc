@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
+/**
+ * 用于服务注册的接口 同时把实现类交由容器管理
+ */
 @Component
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -12,7 +15,6 @@ import java.lang.annotation.*;
 public @interface RpcService {
     /**
      * @Component 的value
-     * @return
      */
     @AliasFor(annotation = Component.class)
     String value() default "";
@@ -34,4 +36,9 @@ public @interface RpcService {
      * @return
      */
     String version() default "";
+
+    /**
+     * 服务的权重
+     */
+    int weight() default 1;
 }

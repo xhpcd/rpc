@@ -58,7 +58,8 @@ public class ClientZKit {
         }
         List<ServiceProvider> list1 = list.stream().map(v -> {
             String[] split = v.split(":");
-            return ServiceProvider.builder().serviceName(serviceName).serverIp(split[0]).rcpPort(Integer.parseInt(split[1])).build();
+            return ServiceProvider.builder().serviceName(serviceName).serverIp(split[0])
+                    .rcpPort(Integer.parseInt(split[1])).weight(Integer.parseInt(split[2])).build();
         }).collect(Collectors.toList());
         return list1;
     }

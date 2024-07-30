@@ -7,15 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RpcHolder {
-    private static final Map<String, RequestPromise> holder = new HashMap<>();
+    /**
+     * 由于Netty的异步线程要和Netty外部线程做数据同步 所以需要Promise 避免混乱通过holder+requestID进行判断
+     */
+    private static final Map<Long, RequestPromise> holder = new HashMap<>();
 
     private static final Map<String, ChannelMapping> mappingHolder = new HashMap<>();
 
-    public static void set(String id,RequestPromise promise){
+    public static void set(Long id,RequestPromise promise){
         holder.put(id,promise);
     }
 
-    public static RequestPromise get(String id){
+    public static RequestPromise get(Long id){
        return holder.remove(id);
     }
 

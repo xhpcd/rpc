@@ -7,10 +7,7 @@ import com.xhpcd.rpc.common.ChannelMapping;
 import com.xhpcd.rpc.data.RpcRequest;
 import com.xhpcd.rpc.data.RpcResponse;
 import com.xhpcd.rpc.handler.RpcResponseHandler;
-import com.xhpcd.rpc.netty.codec.FrameDecoder;
-import com.xhpcd.rpc.netty.codec.FrameEncoder;
-import com.xhpcd.rpc.netty.codec.RpcRequestEncoder;
-import com.xhpcd.rpc.netty.codec.RpcResponseDecoder;
+import com.xhpcd.rpc.netty.codec.*;
 import com.xhpcd.rpc.netty.request.RequestPromise;
 import com.xhpcd.rpc.client.provider.ServiceProvider;
 import com.xhpcd.rpc.util.RpcHolder;
@@ -55,9 +52,11 @@ public class RpcRequestManager {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
                             pipeline.addLast("FrameDecoder",new FrameDecoder());
-                            pipeline.addLast("RpcResponseDecoder",new RpcResponseDecoder());
                             pipeline.addLast("FrameEncoder",new FrameEncoder());
-                            pipeline.addLast("RpcRequestEncoder",new RpcRequestEncoder());
+                            /*pipeline.addLast("RpcResponseDecoder",new RpcResponseDecoder());
+
+                            pipeline.addLast("RpcRequestEncoder",new RpcRequestEncoder());*/
+                            pipeline.addLast("ProtoCodec",new MessageCodec());
                             pipeline.addLast("RpcResponseHandler",new RpcResponseHandler());
                         }
                     });
@@ -79,7 +78,7 @@ public class RpcRequestManager {
             channel = channelMapping.getChannel();
             channel.writeAndFlush(request);
                 RequestPromise requestPromise = new RequestPromise(channel.eventLoop());
-                RpcHolder.set(request.getRequestId(),requestPromise);
+                RpcHolder.set(request.getSequenceId(),requestPromise);
                 RpcResponse rpcResponse = (RpcResponse) requestPromise.get();
                 return rpcResponse;
 

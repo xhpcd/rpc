@@ -4,7 +4,7 @@ import com.xhpcd.rpc.annotation.RpcLoadBalance;
 import com.xhpcd.rpc.client.cluster.LoadBalanceStrategy;
 import com.xhpcd.rpc.client.cluster.StrategyProvider;
 import com.xhpcd.rpc.client.config.RpcClientConfiguration;
-import com.xhpcd.rpc.spring.SpringBeanFactory;
+import com.xhpcd.rpc.spring.factorybean.SpringBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -24,6 +24,9 @@ public class RpcClientConfiguration {
     @Value("${rpc.client.zk.timeout}")
     private int timeOut;
 
+    @Value("${rpc.serializer}")
+    private String serializer;
+
 
 
 }

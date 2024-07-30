@@ -1,9 +1,7 @@
 package com.xhpcd.rpc.server.boot.config;
 
 import lombok.Data;
-import org.I0Itec.zkclient.ZkClient;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -11,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class RpcServerConfiguration {
     @Value("${rpc.server.zk.root}")
     private String zkRoot;
-
 
     @Value("${rpc.server.zk.addr}")
     private String addr;

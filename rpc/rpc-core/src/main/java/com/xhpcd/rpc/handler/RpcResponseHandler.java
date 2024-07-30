@@ -9,7 +9,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 public class RpcResponseHandler extends SimpleChannelInboundHandler<RpcResponse> {
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcResponse rpcResponse) throws Exception {
-        RequestPromise requestPromise = RpcHolder.get(rpcResponse.getRequestId());
+        //线程间同步结果共享
+        RequestPromise requestPromise = RpcHolder.get(rpcResponse.getSequenceId());
         requestPromise.setSuccess(rpcResponse);
 
     }

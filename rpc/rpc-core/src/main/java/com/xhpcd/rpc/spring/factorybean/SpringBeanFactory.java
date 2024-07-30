@@ -1,4 +1,4 @@
-package com.xhpcd.rpc.spring;
+package com.xhpcd.rpc.spring.factorybean;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 
+/**
+ * 使用Spring的Aware机制进行容器注入 便于后续通过容器获得所需要的bean
+ */
 @Component("springBeanFactory")
 public class SpringBeanFactory implements ApplicationContextAware {
     private static ApplicationContext context;

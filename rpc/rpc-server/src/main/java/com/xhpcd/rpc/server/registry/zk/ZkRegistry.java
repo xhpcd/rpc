@@ -5,7 +5,7 @@ import com.xhpcd.rpc.common.IpUtils;
 import com.xhpcd.rpc.server.boot.RpcServer;
 import com.xhpcd.rpc.server.boot.config.RpcServerConfiguration;
 import com.xhpcd.rpc.server.registry.RpcRegistry;
-import com.xhpcd.rpc.spring.SpringBeanFactory;
+import com.xhpcd.rpc.spring.factorybean.SpringBeanFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -30,15 +30,18 @@ public class ZkRegistry implements RpcRegistry {
     public void serviceRegistry() {
         Map<String, Object> beanByAnnotation = SpringBeanFactory.getBeanByAnnotation(RpcService.class);
         if(beanByAnnotation!=null&&!beanByAnnotation.isEmpty()) {
+            //根节点的创建
             serverZKit.createRootNode();
+            //ip获取
             String serverIp = IpUtils.getRealIp();
             for (Map.Entry<String, Object> entry : beanByAnnotation.entrySet()) {
                 RpcService annotation = entry.getValue().getClass().getAnnotation(RpcService.class);
                 Class<?> interfaceClass = annotation.interfaceClass();
+                int weight = annotation.weight();
                 //服务名称
                 String name = interfaceClass.getName();
                 serverZKit.createPersistentNode(name);
-                String providerNode = serverIp+":"+rpcServerConfiguration.getRpcPort();
+                String providerNode = serverIp+":"+rpcServerConfiguration.getRpcPort()+":"+weight;
                 serverZKit.createNode(name+"/"+providerNode);
                 log.info("服务{}-{}完成了注册",name,providerNode);
             }

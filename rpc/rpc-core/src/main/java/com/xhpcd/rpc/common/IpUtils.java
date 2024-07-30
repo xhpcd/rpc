@@ -5,6 +5,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+/**
+ * 用户获取正确真实IP
+ */
 public class IpUtils {
     public static String getRealIp()  {
         String ip=null;

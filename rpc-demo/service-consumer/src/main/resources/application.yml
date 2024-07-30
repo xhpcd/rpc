@@ -16,3 +16,4 @@ rpc:
 
   cluster:
     strategy: polling
+  serializer: PROTOBUF
