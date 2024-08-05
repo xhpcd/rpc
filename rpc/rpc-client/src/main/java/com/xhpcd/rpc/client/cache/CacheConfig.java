@@ -16,7 +16,7 @@ public class CacheConfig {
     @Bean
     public LoadingCache<String, List<ServiceProvider>> loadingCache(){
         return CacheBuilder.newBuilder()
-                .refreshAfterWrite(1, TimeUnit.MINUTES) // 设置1分钟后刷新
+              //  .refreshAfterWrite(1, TimeUnit.MINUTES) // 设置1分钟后刷新
                 .build(new CacheLoader<String, List<ServiceProvider>>() {
                     @Override
                     public List<ServiceProvider> load(String key) {

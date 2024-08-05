@@ -33,4 +33,7 @@ public class RpcHolder {
     public static void setChannelMapping(ChannelMapping channelMapping){
         mappingHolder.put(channelMapping.getIpWithPort(),channelMapping);
     }
+    public static void removeChannelMapping(ChannelMapping channelMapping){
+        mappingHolder.remove(channelMapping.getIpWithPort());
+    }
 }

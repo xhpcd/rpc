@@ -11,6 +11,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.NettyRuntime;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.UnorderedThreadPoolEventExecutor;
@@ -51,6 +54,22 @@ public class NettyServer implements RpcServer, Serializable {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline pipeline = socketChannel.pipeline();
+                            //用来检测客户端是否假死
+                            pipeline.addLast(new IdleStateHandler(20,0,0));
+                            pipeline.addLast(new ChannelDuplexHandler(){
+
+                                //即是入站也是出站处理器
+                                //用来触发特定事件
+
+                                @Override
+                                public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+                                    IdleStateEvent idl = (IdleStateEvent)evt;
+                                    if(idl.state() == IdleState.READER_IDLE){
+                                        log.info("客户端10s未发送信息");
+                                        ctx.channel().close();
+                                    }
+                                }
+                            });
                             pipeline.addLast("FrameEncoder",new FrameEncoder());
                             pipeline.addLast("FrameDecoder",new FrameDecoder());
                             pipeline.addLast("ProtoCodec",new MessageCodec());

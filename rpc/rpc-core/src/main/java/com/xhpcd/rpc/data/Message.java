@@ -12,10 +12,12 @@ public abstract class Message {
     public String algorithm;
     public static final int RpcRequest = 0;
     public static final int RpcResponse = 1;
+    public static final int PingMessage = 2;
     public abstract Integer getMessageType();
     public static final Map<Integer,Class<?>> messageClass = new HashMap<>();
     static {
         messageClass.put(0,com.xhpcd.rpc.data.RpcRequest.class);
         messageClass.put(1,com.xhpcd.rpc.data.RpcResponse.class);
+        messageClass.put(2,com.xhpcd.rpc.data.PingMessage.class);
     }
 }
