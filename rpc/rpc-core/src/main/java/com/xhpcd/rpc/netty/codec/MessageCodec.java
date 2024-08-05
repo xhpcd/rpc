@@ -3,27 +3,16 @@ package com.xhpcd.rpc.netty.codec;
 
 import com.xhpcd.rpc.common.Serializer;
 import com.xhpcd.rpc.data.Message;
-import com.xhpcd.rpc.data.RpcResponse;
-import com.xhpcd.rpc.spring.factorybean.SpringBeanFactory;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageCodec;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- *
- * @Author: 喜欢排长队
- * @Date: 2023/12/09/22:18
- * @Description:保持2的正数次方
- */
+
 @Slf4j
 public class MessageCodec extends ByteToMessageCodec<Message> {
     static final byte[] MAGIC_NUMBER = { 'x', 'h', 'p', 'c', 'd'};
