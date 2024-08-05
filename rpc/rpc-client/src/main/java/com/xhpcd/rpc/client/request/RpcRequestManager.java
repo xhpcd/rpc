@@ -65,14 +65,14 @@ public class RpcRequestManager {
                             pipeline.addLast("RpcRequestEncoder",new RpcRequestEncoder());*/
                             pipeline.addLast("ProtoCodec",new MessageCodec());
 
-                            pipeline.addLast(new IdleStateHandler(0,5,0));
+                            pipeline.addLast(new IdleStateHandler(0,15,0));
                             pipeline.addLast( new ChannelDuplexHandler(){
                                 @Override
                                 public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 
                                     IdleStateEvent event =  (IdleStateEvent)evt;
                                     if(event.state() == IdleState.WRITER_IDLE){
-                                        log.info("检测到5秒未发数据发送心跳");
+                                        log.info("检测到15秒未发数据发送心跳");
                                         PingMessage pingMessage = new PingMessage();
                                         pingMessage.setAlgorithm(rpcClientConfiguration.getSerializer());
                                         pingMessage.setSequenceId(UniqueIdGenerator.generateUniqueId());

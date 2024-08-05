@@ -65,7 +65,7 @@ public class NettyServer implements RpcServer, Serializable {
                                 public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
                                     IdleStateEvent idl = (IdleStateEvent)evt;
                                     if(idl.state() == IdleState.READER_IDLE){
-                                        log.info("客户端10s未发送信息");
+                                        log.info("客户端15s未发送信息");
                                         ctx.channel().close();
                                     }
                                 }
