@@ -121,6 +121,63 @@ rpc:
 
 # 原理分析
 
+## 负载均衡算法
+
+###   权重轮询
+
+```
+public ServiceProvider select(List<ServiceProvider> list) {
+    ServiceProvider serviceProvider = list.get(0);
+    boolean isFirst = serviceProvider.isFirst();
+    //计算总权重
+    int totalWeight = list.stream().map(s->s.getWeight()).mapToInt(Integer::intValue).sum();
+    //当前权重加上自身权重
+    ServiceProvider taeget = null;
+    if(isFirst){
+        taeget = list.stream().max(Comparator.comparing(ServiceProvider::getCurrentWeight)).get();
+        taeget.setCurrentWeight(taeget.getCurrentWeight() - totalWeight);
+    }else {
+        list.forEach(s->s.setCurrentWeight(s.getCurrentWeight()+s.getWeight()));
+        taeget = list.stream().max(Comparator.comparing(ServiceProvider::getCurrentWeight)).get();
+        taeget.setCurrentWeight(taeget.getCurrentWeight() - totalWeight);
+    }
+    return taeget;
+
+}
+```
+
+###    轮询算法
+
+```
+public int computeNextIndex(int size){
+    for(;;){
+        int i = index.get();
+        int next = (i+1)%size;
+        if(index.compareAndSet(i,next)){
+            return i;
+        }
+    }
+}
+```
+
+### 哈希算法
+
+```
+String local = IpUtils.getRealIp();
+@Override
+public ServiceProvider select(List<ServiceProvider> list) {
+   return list.get(local.hashCode()%list.size());
+}
+```
+
+### 随机算法
+
+```
+public ServiceProvider select(List<ServiceProvider> list) {
+    return list.get(random.nextInt(list.size()));
+}
+```
+
 ##     自定义协议格式
 
 ​            
@@ -205,6 +262,8 @@ public class MessageCodec extends ByteToMessageCodec<Message> {
 
     }
 ```
+
+## 消息类型
 
 请求体响应体共有信息的抽取
 
